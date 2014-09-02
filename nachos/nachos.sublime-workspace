@@ -1,0 +1,1120 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Join",
+				"JoinGrader1"
+			],
+			[
+				"pass",
+				"passedTests=0"
+			],
+			[
+				"total",
+				"totalTests=0"
+			],
+			[
+				"Th",
+				"ThreadGrader3"
+			],
+			[
+				"Thre",
+				"ThreadGrader1"
+			],
+			[
+				"wait",
+				"waitQueue"
+			],
+			[
+				"emit",
+				"emit_intermediate"
+			],
+			[
+				"m",
+				"MapReduce"
+			],
+			[
+				"DE",
+				"DEFAULT_TIMEOUT"
+			],
+			[
+				"Sign",
+				"signInFailure"
+			],
+			[
+				"Boo",
+				"Boolean"
+			],
+			[
+				"conta",
+				"containsPrefix"
+			],
+			[
+				"get",
+				"getRoot"
+			],
+			[
+				"la",
+				"lastPrefix"
+			],
+			[
+				"las",
+				"lastPrefixString"
+			],
+			[
+				"con",
+				"containsPrefix"
+			],
+			[
+				"Tri",
+				"TrieSET"
+			],
+			[
+				"add",
+				"addChild"
+			],
+			[
+				"tri",
+				"TrieSET"
+			],
+			[
+				"score",
+				"scoreOfBoard"
+			],
+			[
+				"Bo",
+				"BoggleBoard"
+			],
+			[
+				"ya",
+				"yawlObj"
+			],
+			[
+				"read",
+				"readAllStrings"
+			],
+			[
+				"BO",
+				"BoggleSolver"
+			],
+			[
+				"Bogg",
+				"BoggleSolver"
+			],
+			[
+				"Boog",
+				"BoggleBoard"
+			],
+			[
+				"MODE_",
+				"MODE_CTR"
+			],
+			[
+				"MODE",
+				"MODE_CTR"
+			],
+			[
+				"cip",
+				"ciphertext"
+			],
+			[
+				"ci",
+				"ciphertext"
+			],
+			[
+				"if",
+				"ifmain	if __name__ == '__main__'"
+			],
+			[
+				"teams",
+				"teamsIdx"
+			],
+			[
+				"team",
+				"team2Node"
+			],
+			[
+				"match",
+				"matchIdx"
+			],
+			[
+				"IN",
+				"POSITIVE_INFINITY"
+			],
+			[
+				"ca",
+				"capacities"
+			],
+			[
+				"no",
+				"numberOfTeams"
+			],
+			[
+				"is",
+				"isTriviallyEliminated"
+			],
+			[
+				"el",
+				"eliminated"
+			],
+			[
+				"le",
+				"length"
+			],
+			[
+				"Team",
+				"teamsIdx"
+			],
+			[
+				"trho",
+				"throwExceptionIfNull"
+			],
+			[
+				"trh",
+				"throwExceptionIfNull"
+			],
+			[
+				"ref",
+				"refHSeam"
+			],
+			[
+				"e",
+				"energy"
+			],
+			[
+				"min",
+				"main	method (main)"
+			],
+			[
+				"refV",
+				"refVerticalSeam"
+			],
+			[
+				"toa",
+				"totalEnergyVertSeam"
+			],
+			[
+				"totalE",
+				"totalEnergyHorzSeam"
+			],
+			[
+				"horiz",
+				"horizontalSeam"
+			],
+			[
+				"to",
+				"totalSeamEnergy"
+			],
+			[
+				"w",
+				"w"
+			],
+			[
+				"lo",
+				"lowestEnergyIdx"
+			],
+			[
+				"last",
+				"lastLength"
+			],
+			[
+				"dist",
+				"distance"
+			],
+			[
+				"noun",
+				"nounA"
+			],
+			[
+				"v",
+				"v	variable"
+			],
+			[
+				"ance",
+				"ancestorEdge"
+			],
+			[
+				"lastV",
+				"lastVIt"
+			],
+			[
+				"an",
+				"ancestor"
+			],
+			[
+				"expl",
+				"exploredSet"
+			],
+			[
+				"distF",
+				"distFromS"
+			],
+			[
+				"GRP",
+				"GRP_T"
+			],
+			[
+				"GR",
+				"GRP_S"
+			],
+			[
+				"brea",
+				"BreadthFirstDirectedPaths"
+			],
+			[
+				"In",
+				"Integer"
+			],
+			[
+				"s",
+				"synsets"
+			],
+			[
+				"synSet",
+				"synsets"
+			],
+			[
+				"sy",
+				"synonyms"
+			],
+			[
+				"Re",
+				"ResizableArray"
+			],
+			[
+				"A",
+				"ArrayList"
+			],
+			[
+				"clo",
+				"closestSoFar"
+			],
+			[
+				"clos",
+				"closestSoFar"
+			],
+			[
+				"rect",
+				"RectHV"
+			],
+			[
+				"S",
+				"StdOut"
+			],
+			[
+				"sq",
+				"squaredCalls"
+			],
+			[
+				"dis",
+				"distToNearest"
+			],
+			[
+				"distTO",
+				"distToNearest"
+			],
+			[
+				"distTo",
+				"distToNearest"
+			],
+			[
+				"distT",
+				"distToNearest"
+			],
+			[
+				"Point",
+				"Point2D"
+			],
+			[
+				"rec",
+				"rectangle"
+			],
+			[
+				"STd",
+				"StdDraw"
+			],
+			[
+				"tree",
+				"readKdTree"
+			],
+			[
+				"dios",
+				"distanceSquaredTo"
+			],
+			[
+				"dista",
+				"distanceSquaredTo"
+			],
+			[
+				"setPE",
+				"setPenRadius"
+			],
+			[
+				"point",
+				"Point2D"
+			],
+			[
+				"y",
+				"ymax"
+			],
+			[
+				"l",
+				"lb"
+			],
+			[
+				"PO",
+				"Point2D"
+			],
+			[
+				"po",
+				"points"
+			],
+			[
+				"sol",
+				"solution"
+			],
+			[
+				"Solut",
+				"solutionPriority"
+			],
+			[
+				"soli",
+				"solutionNode"
+			],
+			[
+				"copy",
+				"copyOfBoard"
+			],
+			[
+				"ne",
+				"neighbors"
+			],
+			[
+				"ni",
+				"neighbors"
+			],
+			[
+				"qu",
+				"queueTwin"
+			],
+			[
+				"nie",
+				"neighbor"
+			],
+			[
+				"nei",
+				"neighbors"
+			],
+			[
+				"solve",
+				"solveOneStep"
+			],
+			[
+				"n",
+				"neighbors"
+			],
+			[
+				"from",
+				"fromY"
+			],
+			[
+				"de",
+				"dimension"
+			],
+			[
+				"d",
+				"dimension"
+			],
+			[
+				"print",
+				"printPoints"
+			],
+			[
+				"sl",
+				"slopeIdx"
+			],
+			[
+				"prin",
+				"println"
+			],
+			[
+				"for",
+				"for	for"
+			],
+			[
+				"arr",
+				"arr2"
+			],
+			[
+				"assert",
+				"assertTrue"
+			],
+			[
+				"remove",
+				"removeLast"
+			],
+			[
+				"Random",
+				"RandomizedQueueIterator"
+			],
+			[
+				"Rand",
+				"RandomizedQueueIterator"
+			],
+			[
+				"NO",
+				"NoSuchElementException"
+			],
+			[
+				"De",
+				"DequeIterator"
+			],
+			[
+				"No",
+				"NoSuchElementException"
+			],
+			[
+				"union",
+				"unionSites"
+			],
+			[
+				"conenc",
+				"connectToBottom"
+			],
+			[
+				"bottom",
+				"bottomConnected"
+			],
+			[
+				"connect",
+				"connectedToBottom"
+			],
+			[
+				"bott",
+				"bottomConnected"
+			],
+			[
+				"conn",
+				"connectedToBottom"
+			],
+			[
+				"b",
+				"bottomSites"
+			],
+			[
+				"boo",
+				"bottomSitesUF"
+			],
+			[
+				"confi",
+				"confidenceHi"
+			],
+			[
+				"c",
+				"confidence"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "threads/Condition.java",
+			"settings":
+			{
+				"buffer_size": 3661,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "Packages/Markdown Preview/Markdown.sublime-build",
+	"command_palette":
+	{
+		"height": 53.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"dock",
+				"DocBlockr: Reparse comment block"
+			],
+			[
+				"doc",
+				"DocBlockr: Reparse comment block"
+			],
+			[
+				"dic",
+				"DocBlockr: Decorate line comment"
+			],
+			[
+				"sort",
+				"Sort Lines"
+			],
+			[
+				"run",
+				"Build: Run JUnit"
+			],
+			[
+				"re",
+				"File: Rename"
+			],
+			[
+				"rn",
+				"Build: Run JUnit"
+			],
+			[
+				"renam",
+				"File: Rename"
+			],
+			[
+				"rename",
+				"File: Rename"
+			],
+			[
+				"chec",
+				"Build: CheckStyle"
+			],
+			[
+				"upda",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"up",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"lowe",
+				"Convert Case: Lower Case"
+			],
+			[
+				"upp",
+				"Convert Case: Upper Case"
+			],
+			[
+				"upper",
+				"Convert Case: Upper Case"
+			],
+			[
+				"list",
+				"Package Control: List Packages"
+			],
+			[
+				"ru",
+				"Build: Run JUnit"
+			],
+			[
+				"INST",
+				"Package Control: Install Package"
+			],
+			[
+				"run	",
+				"Build: Run JUnit"
+			],
+			[
+				"cgec",
+				"Package Control: Grab CA Certs"
+			],
+			[
+				"cance",
+				"Build: Cancel"
+			],
+			[
+				"isntall",
+				"Package Control: Install Package"
+			],
+			[
+				"check",
+				"Build: CheckStyle"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"r",
+				"Build: Run JUnit"
+			]
+		],
+		"width": 435.0
+	},
+	"console":
+	{
+		"height": 295.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/TCB.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/ag/AutoGrader.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/Interrupt.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/Machine.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/KThread.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/proj1/README.md",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/ag/ThreadGrader3.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/ag/JoinGrader1.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/bin/runTests.sh",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/ag/BasicTestGrader.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/RoundRobinScheduler.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/proj1/output.log",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/Lib.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/Condition2.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/Condition.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/Rider.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/Semaphore.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/SynchList.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/ElevatorController.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/Boat.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/Alarm.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/Timer.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/StubFileSystem.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/StandardConsole.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/RiderInterface.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/Processor.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/NetworkLink.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/Kernel.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/ElevatorTest.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/ElevatorControllerInterface.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/machine/ElevatorBank.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/ag/ThreadGrader1.java",
+		"/Users/ujjwalj/Library/Application Support/Sublime Text 3/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/ujjwalj/Library/Application Support/Sublime Text 3/Packages/Default/Default (OSX).sublime-keymap",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/proj1/Makefile",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/threads/ThreadQueue.java",
+		"/Users/ujjwalj/Dropbox/Projects/OS/CS162/nachos/proj1/nachos.conf",
+		"/Users/ujjwalj/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/ujjwalj/Library/Application Support/Sublime Text 3/Packages/Default/Preferences.sublime-settings",
+		"/Users/ujjwalj/Desktop/spengo.txt",
+		"/Users/ujjwalj/Dropbox/Projects/OS/pset1/nachos/ag/AutoGrader.java",
+		"/Users/ujjwalj/Desktop/DeletedDomainsCFNStacks.txt",
+		"/Users/ujjwalj/Desktop/CFNStacks",
+		"/Users/ujjwalj/Desktop/Oncall.txt",
+		"/Users/ujjwalj/Dropbox/Projects/DataScience/pset3/join.py",
+		"/Users/ujjwalj/Dropbox/Projects/DataScience/pset3/inverted_index.py",
+		"/Users/ujjwalj/Dropbox/Projects/DataScience/pset3/MapReduce.py",
+		"/Users/ujjwalj/Dropbox/Projects/DataScience/pset3/wordcount.py",
+		"/Users/ujjwalj/Dropbox/Projects/DataScience/pset1/frequency.py",
+		"/Users/ujjwalj/Dropbox/Projects/DataScience/pset1/happiest_state.py",
+		"/Users/ujjwalj/Downloads/0034146026_1406774298_igw-delete-failed-stacks-deduped-1",
+		"/Users/ujjwalj/Desktop/0034125746_1406733603_GalaxyDeleteFailedStacksIAD",
+		"/Users/ujjwalj/Desktop/714dd7acdbf2888af88ae2037841b454:     81",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset1/Percolation.java",
+		"/Users/ujjwalj/Downloads/dracula-theme-master/Dracula.tmTheme",
+		"/Users/ujjwalj/Desktop/GalaxyConsoleWhitelist.txt",
+		"/Users/ujjwalj/Dropbox/dump/script/script/pack.pl",
+		"/Users/ujjwalj/Dropbox/dump/script/script/dump",
+		"/Users/ujjwalj/Dropbox/dump/script/script/1",
+		"/Users/ujjwalj/Dropbox/Projects/DataScience/pset2/p3.sql",
+		"/Users/ujjwalj/Dropbox/Projects/DataScience/pset2/select.txt",
+		"/Users/ujjwalj/Dropbox/Projects/DataScience/pset2/p2.sql",
+		"/Users/ujjwalj/Dropbox/Projects/DataScience/pset2/Select.sql",
+		"/Users/ujjwalj/Desktop/Solution.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset4/Board.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset3/Fast.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset3/Point.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset3/Brute.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset2/RandomizedQueue.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset2/Deque.java",
+		"/Users/ujjwalj/t.java",
+		"/Users/ujjwalj/Downloads/MANIFEST (1)",
+		"/Users/ujjwalj/Downloads/Samba/MANIFEST",
+		"/Users/ujjwalj/Downloads/MANIFEST",
+		"/Users/ujjwalj/Library/Application Support/Sublime Text 3/Packages/Tomorrow Color Schemes/Xcode.tmTheme",
+		"/Users/ujjwalj/Library/Application Support/Sublime Text 3/Packages/Tomorrow Color Schemes/Tomorrow Light.tmTheme",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset10/MoveToFront.java",
+		"/Users/ujjwalj/Pictures/Wallpapers/Untitled.itermcolors",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset10/HexDump.java",
+		"/rhel5pdi/workspace/GalaxyConsole/src/GalaxyConsole/tst/casper/run.js",
+		"/rhel5pdi/workspace/GalaxyConsole/src/GalaxyConsole/tst/casper/galaxy/describeDirectories.js",
+		"/Users/ujjwalj/Dropbox/Projects/Crypto/pset1/decode_cipher.py",
+		"/Users/ujjwalj/Dropbox/Projects/Crypto/pset5/num.py",
+		"/Users/ujjwalj/Documents/Notes",
+		"/Users/ujjwalj/Documents/UI Notes",
+		"/Users/ujjwalj/Movies/H.P.4-Goblet.Of.Fire[2005].srt",
+		"/Users/ujjwalj/Documents/Pager Training.txt",
+		"/Users/ujjwalj/Movies/H.P.4-Goblet.Of.Fire[2005].sub",
+		"/Users/ujjwalj/Downloads/TextMate.app/Contents/Resources/Sublime Text.icns",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/board.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/dictionary.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset7/SeamCarverTest.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/BoggleSolverTest.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/BoggleSolver.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/MyTrie.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/Trie.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/BoggleBoard.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/TrieSET.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/boggle/board4x0.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/boggle/board-q.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/boggle/board4x4.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/boggle/board-points3.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/boggle/board0x4.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/boggle/board-points1.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/boggle/board-couscous.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/boggle/board-aqua.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset9/boggle/board-16q.txt",
+		"/Users/ujjwalj/Downloads/st2.icns",
+		"/Users/ujjwalj/Dropbox/Projects/Crypto/pset3/mac_video.py",
+		"/Users/ujjwalj/Dropbox/Projects/Crypto/pset2/CBC.py",
+		"/Users/ujjwalj/Dropbox/Projects/Crypto/pset1/xor_hex_strings.py",
+		"/Users/ujjwalj/Downloads/code.txt",
+		"/Users/ujjwalj/Dropbox/Projects/Crypto/pset1/ciphertext.txt",
+		"/Users/ujjwalj/Library/Application Support/Sublime Text 3/Packages/Tomorrow Color Schemes/Coal Graal.tmTheme",
+		"/Users/ujjwalj/Library/Application Support/Sublime Text 3/Packages/Theme - Soda/Soda Light 3.sublime-theme",
+		"/Users/ujjwalj/Library/Application Support/Sublime Text 3/Packages/Theme - Soda/Soda Light/Widget - Soda Light.stTheme",
+		"/Users/ujjwalj/Library/Application Support/Sublime Text 3/Packages/User/Theme - Soda/Soda Light 3.sublime-theme",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset8/baseball/teams4a.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset8/baseball/teams4.txt",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset8/BaseballElimination.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset7/SeamCarver.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset7/ShowEnergy.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset7/SCUtility.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset7/WritePicture.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset7/PrintSeams.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset7/PrintEnergy.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset6/bk.java",
+		"/Users/ujjwalj/Dropbox/Projects/PrincetonAlgo/assignments/pset6/BFS.java"
+	],
+	"find":
+	{
+		"height": 29.0
+	},
+	"find_in_files":
+	{
+		"height": 101.0,
+		"where_history":
+		[
+			"MyTrie.java",
+			"Trie.java",
+			"WritePicture.java",
+			"BFS.java",
+			"BreadthFirstDirectedPaths.java",
+			"KdTree.java",
+			"<open files>"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"run",
+			"	if [ 1 ] then\n		echo \"Passed\"\n		#passedTests=passedTests + 1\n	fi",
+			"readyQueue",
+			"target",
+			"new kthread",
+			"idlethread",
+			"void",
+			"createIdleThread",
+			"fork",
+			"givePriv",
+			"GalaxyStack",
+			"GalaxyStack-6d2c2080-877b-40de-8a3f-e6d2f09cc55b\n",
+			"GalaxyStack",
+			"if ",
+			"'",
+			"\"",
+			"...>",
+			"april",
+			"no_round",
+			"Wed Jul 02 22:22:29 2014 GMT Galaxy 1266-0@aws-galaxy-beta-iad7-m1large-i-4638552d.us-east-1.amazon.com:0 [INFO] (precreate-processor) com.amazonaws.galaxy.core.activities.MaintainPreCreateTask: ",
+			"Wed Jul 02 22:22:27 2014 GMT Galaxy 1266-0@aws-galaxy-beta-iad7-m1large-i-4638552d.us-east-1.amazon.com:0 [INFO] (precreate-processor) com.amazonaws.galaxy.core.activities.MaintainPreCreateTask: ",
+			"Wed Jul 02 22:22:26 2014 GMT Galaxy 1266-0@aws-galaxy-beta-iad7-m1large-i-4638552d.us-east-1.amazon.com:0 [INFO] (precreate-processor) com.amazonaws.galaxy.core.activities.MaintainPreCreateTask: ",
+			"Wed Jul 02 22:22:24 2014 GMT Galaxy 1266-0@aws-galaxy-beta-iad7-m1large-i-4638552d.us-east-1.amazon.com:0 [INFO] (precreate-processor) com.amazonaws.galaxy.core.activities.MaintainPreCreateTask: ",
+			"Wed Jul 02 22:22:22 2014 GMT Galaxy 1266-0@aws-galaxy-beta-iad7-m1large-i-4638552d.us-east-1.amazon.com:0 [INFO] (precreate-processor) com.amazonaws.galaxy.core.activities.MaintainPreCreateTask: ",
+			"Wed Jul 02 22:22:20 2014 GMT Galaxy 1266-0@aws-galaxy-beta-iad7-m1large-i-4638552d.us-east-1.amazon.com:0 [INFO] (precreate-processor) com.amazonaws.galaxy.core.activities.MaintainPreCreateTask:",
+			"Wed Jul 02 22:22:18 2014 GMT Galaxy 1266-0@aws-galaxy-beta-iad7-m1large-i-4638552d.us-east-1.amazon.com:0 [INFO] (precreate-processor) com.amazonaws.galaxy.core.activities.MaintainPreCreateTask:",
+			"throttle",
+			"newPreCreate",
+			" ",
+			"\n ",
+			"Wed Jul 02 22:12:18 2014 GMT Galaxy 1266-0@aws-galaxy-beta-iad7-m1large-i-4638552d.us-east-1.amazon.com:0 [INFO] (precreate-processor) com.amazonaws.galaxy.core.activities.MaintainPreCreateTask:",
+			"class",
+			"next\\[",
+			"next[",
+			"TrieST",
+			"TST",
+			"dict",
+			"TrieST",
+			"public",
+			"BI$",
+			"^SSI$",
+			"SSI$",
+			"SSI",
+			"54 68 65 20 73 65 63 72 65 74 20 6d 65 73 73 61 67 65 20 69 73 3a 20 57 68 65 6e 20 75 73 69 6e 67 20 61 20 73 74 72 65 61 6d 20 63 69 70 68 65 72 2c 20 6e 65 76 65 72 20 75 73 65 20 74 68 65 20 6b 65 79 20 6d 6f 72 65 20 74 68 61 6e 20 6f 6e 63 65",
+			"54",
+			"0",
+			"set",
+			"128",
+			"a",
+			"0e",
+			"0f",
+			"10",
+			"11",
+			"12",
+			"13",
+			"14",
+			"15",
+			"16",
+			"17",
+			"18",
+			"19",
+			"1a",
+			"1b",
+			"1c",
+			"1d",
+			"1e",
+			"1f",
+			"0d",
+			"0c",
+			"0b",
+			"0a",
+			"09",
+			"08",
+			"07",
+			"06",
+			"05",
+			"04",
+			"03",
+			"02",
+			"01",
+			"20",
+			"61",
+			"6161",
+			"open",
+			"set",
+			"1",
+			"p",
+			"]",
+			"p",
+			"java.awt.",
+			"java",
+			"java.awt",
+			"java",
+			"Arrays",
+			"arrays",
+			"explored",
+			"BreadthFirstDirectedPaths",
+			"BFS",
+			"BreadthFirstDirectedPaths",
+			"nearest",
+			"contains",
+			"size++",
+			"StdRandom",
+			"std",
+			"StdRandom",
+			"std",
+			"draw",
+			"size",
+			"PointSET",
+			"KdTree",
+			"PointSET",
+			"AuthRuntime",
+			"Dependency of",
+			"stdrandom",
+			"bottomSites",
+			"N",
+			"stdrandom",
+			"lastINdex",
+			");\n",
+			"line"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"MyTrie",
+			"Trie",
+			")",
+			"BFS",
+			"AncestorBFS",
+			"BFS",
+			"KdTree"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "threads/Condition.java",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3661,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2144,
+								2144
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": false,
+							"vintage":
+							{
+								"action": null,
+								"action_count": "",
+								"capture_register": false,
+								"mode": "mode_normal",
+								"motion": null,
+								"motion_count": "",
+								"partial_sequence": "",
+								"register": "\"",
+								"sequence": "",
+								"xpos": 22
+							}
+						},
+						"translation.x": 0.0,
+						"translation.y": 603.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 29.0
+	},
+	"input":
+	{
+		"height": 39.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 186.0
+	},
+	"output.find_results":
+	{
+		"height": 126.0
+	},
+	"output.markdown":
+	{
+		"height": 138.0
+	},
+	"project": "nachos.sublime-project",
+	"replace":
+	{
+		"height": 54.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"roun",
+				"threads/RoundRobinScheduler.java"
+			],
+			[
+				"auto",
+				"ag/AutoGrader.java"
+			],
+			[
+				"machin",
+				"machine/Machine.java"
+			],
+			[
+				"seam",
+				"SeamCarverTest.java"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 375.0,
+		"selected_items":
+		[
+		],
+		"width": 378.0
+	},
+	"settings":
+	{
+		"vintage":
+		{
+		}
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 202.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
