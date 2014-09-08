@@ -17,7 +17,7 @@ security =	Privilege NachosSecurityManager
 ag =		AutoGrader BoatGrader ThreadGrader1 ThreadGrader2 ThreadGrader3 \
 			ThreadGrader4 ThreadGrader5 ThreadGrader6 JoinGrader1 JoinGrader2 \
 			AlarmGrader1 CommunicatorGrader1 CommunicatorGrader2 \
-			SchedulerGrader1 SchedulerGrader2
+			SchedulerGrader1 SchedulerGrader2 SchedulerGrader3
 
 threads =	ThreadedKernel KThread Alarm \
 		Scheduler ThreadQueue RoundRobinScheduler \
@@ -29,7 +29,7 @@ userprog =	UserKernel UThread UserProcess SynchConsole
 
 vm =		VMKernel VMProcess
 
-network = 	NetKernel NetProcess PostOffice MailMessage
+network =	NetKernel NetProcess PostOffice MailMessage
 
 ALLDIRS = machine security ag threads userprog vm network
 

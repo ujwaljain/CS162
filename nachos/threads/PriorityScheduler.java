@@ -5,6 +5,7 @@ import nachos.machine.*;
 import java.util.TreeSet;
 import java.util.HashSet;
 import java.util.PriorityQueue;
+import java.util.LinkedList;
 import java.util.Iterator;
 
 /**
@@ -127,7 +128,6 @@ public class PriorityScheduler extends Scheduler {
      * A <tt>ThreadQueue</tt> that sorts threads by priority.
      */
     protected class PQueue extends ThreadQueue {
-    	PriorityQueue<ThreadState> waitThreads;
 		PQueue(boolean transferPriority) {
 	    	this.transferPriority = transferPriority;
 	    	waitThreads = new PriorityQueue<ThreadState>();
@@ -139,15 +139,22 @@ public class PriorityScheduler extends Scheduler {
 		}
 
 		public void acquire(KThread thread) {
-	    	Lib.assertTrue(Machine.interrupt().disabled());
-	    	//getThreadState(thread).acquire(this);
-	    	//waitThreads.remove();
+			Lib.assertTrue(Machine.interrupt().disabled());
+			ThreadState ts = getThreadState(thread);
+			ts.acquire(this);
 		}
 
 		public KThread nextThread() {
-	    	Lib.assertTrue(Machine.interrupt().disabled());
-	    	ThreadState ts = waitThreads.poll();
-	    	return (ts != null) ? ts.thread : null;
+			Lib.assertTrue(Machine.interrupt().disabled());
+			ThreadState ts = waitThreads.poll();
+			if (ts != null) {
+				ts.acquire(this);
+				return ts.thread;
+			} else {
+				// Queue is empty.
+				time = 0;
+			}
+			return null;
 		}
 
 		/**
@@ -171,6 +178,13 @@ public class PriorityScheduler extends Scheduler {
 		 * threads to the owning thread.
 		 */
 		public boolean transferPriority;
+		/* queue waiting for the resource */private PriorityQueue<ThreadState> waitThreads;
+		/* current owner/holder of the resource */
+		private ThreadState owner;
+		/* High priority thread blocked in the queue. */
+		private ThreadState highPriorityThread;
+		/* Oldest thread time */
+		private int time = 0;
     }
 
     /**
@@ -207,8 +221,11 @@ public class PriorityScheduler extends Scheduler {
 		 * @return	the effective priority of the associated thread.
 		 */
 		public int getEffectivePriority() {
-	    	// implement me
-	    	return priority;
+			ThreadState donor = (waitingOn != null) ? waitingOn.highPriorityThread : null;
+			int donatedPriority = (donor != null && donor != this) ?
+					donor.getEffectivePriority() : -1;
+
+			return Math.max(priority, donatedPriority);
 		}
 
 		/**
@@ -221,8 +238,6 @@ public class PriorityScheduler extends Scheduler {
 				return;
 	    
 	    	this.priority = priority;
-	    
-	    	// implement me
 		}
 
 		/**
@@ -238,7 +253,20 @@ public class PriorityScheduler extends Scheduler {
 		 * @see	nachos.threads.ThreadQueue#waitForAccess
 		 */
 		public void waitForAccess(PQueue waitQueue) {
-	    	waitQueue.waitThreads.add(this);
+			relativeTime = waitQueue.time++;
+			waitingOn = waitQueue;
+
+			/* If the just acquired thread is queued back, then it donates its 
+			 * priority to all the waiting threads.
+			 */
+			if (waitQueue.owner == this) {
+				ThreadState currentHighPThread = waitQueue.highPriorityThread;
+				if (currentHighPThread == null
+					|| currentHighPThread.getEffectivePriority() < getEffectivePriority())
+					waitQueue.highPriorityThread = this;
+				waitQueue.owner = null; /* new owner will be assigned */
+			}
+			waitQueue.waitThreads.add(this);
 		}
 
 		/**
@@ -252,22 +280,28 @@ public class PriorityScheduler extends Scheduler {
 		 * @see	nachos.threads.ThreadQueue#nextThread
 		 */
 		public void acquire(PQueue waitQueue) {
-	    	
+			waitQueue.owner = this;
 		}
 
 		public int compareTo(Object o) {
 			ThreadState that = (ThreadState) o;
 			// default is MinPriorityQueue
-			return that.priority - this.priority;
+			int cmp = that.getEffectivePriority() - this.getEffectivePriority();
+			if (cmp == 0) return this.relativeTime - that.relativeTime;
+			return cmp;
 		}
 
 		public String toString() {
-			return thread.toString() + "[" + priority + "]";
+			return thread.toString() + "[" + priority + "-" + getEffectivePriority() + 
+				"-" + relativeTime + "]";
 		}
 
 		/** The thread with which this object is associated. */	   
 		protected KThread thread;
 		/** The priority of the associated thread. */
 		protected int priority;
+		/** waiting time in the queue */
+		protected int relativeTime = -1;
+		protected PQueue waitingOn;
     }
 }

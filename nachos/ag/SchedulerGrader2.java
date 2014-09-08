@@ -25,7 +25,7 @@ public class SchedulerGrader2 extends BasicTestGrader
 		forkNewThread(new sender(), 2);
 		forkNewThread(new receiver(), 3);
 
-		while (received == -1) {		
+		while (received != 321) {
 			assertTrue(Machine.timer().getTime() < 2000, 
 				"waited for too long.");
 			KThread.yield();
@@ -46,6 +46,7 @@ public class SchedulerGrader2 extends BasicTestGrader
 			while (received == -1) {
 				KThread.yield();
 			}
+			received = 321;
 		}
 	}
 }

@@ -25,6 +25,7 @@ public class SchedulerGrader1 extends BasicTestGrader
 		set.clear();
 		buf = new StringBuffer();
 		refBuf = new StringBuffer();
+
 		for (int i = 0; i < total; ++i) {
 			int p = Lib.random(PriorityScheduler.priorityMaximum + 1);
 	  		set.add(forkNewThread(new a(p), p));
@@ -40,7 +41,7 @@ public class SchedulerGrader1 extends BasicTestGrader
 		assertTrue(refBuf.toString().equals(buf.toString()),
 			"incorrect sequence" + " Ref: " + new String(chars) +
 			" Output: " + buf.toString());
-	
+
 		done();
 	}
   
@@ -51,7 +52,6 @@ public class SchedulerGrader1 extends BasicTestGrader
 		}
 		public void run () {
 			buf.append(which);
-			KThread.yield();
 		}
 	}
 }
