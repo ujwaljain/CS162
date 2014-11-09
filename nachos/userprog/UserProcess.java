@@ -27,6 +27,13 @@ public class UserProcess {
 	pageTable = new TranslationEntry[numPhysPages];
 	for (int i=0; i<numPhysPages; i++)
 	    pageTable[i] = new TranslationEntry(i,i, true,false,false,false);
+
+        fds = new FileDescriptor[MAXFD];
+        for (int i=0; i<MAXFD; i++) {
+            fds[i] = new FileDescriptor();
+            if (isStandardFileDescriptor(i))
+                fds[i].openStandardFileDescriptor(i);
+        }
     }
     
     /**
@@ -346,6 +353,93 @@ public class UserProcess {
 	return 0;
     }
 
+    /**
+     * Handle the creat(char* name) system call
+     */
+    private int handleCreate(int a0) {
+        String filename = readVirtualMemoryString(a0, MAX_ARG_LENGTH);
+        if (isNullOrEmpty(filename))
+            return -1;
+        int fd = openFileForUser(filename, true);
+        Lib.debug(dbgProcess, "handleCreate with fd: " + fd);
+        return fd;
+    }
+
+    /**
+     * Handle open(char* name) system call
+     */
+    private int handleOpen(int a0) {
+        String filename = readVirtualMemoryString(a0, MAX_ARG_LENGTH);
+        if (isNullOrEmpty(filename))
+            return -1;
+        int fd = openFileForUser(filename, false);
+        Lib.debug(dbgProcess, "handleOpen with fd: " + fd);
+        return fd;
+    }
+
+    private int handleClose(int fdIndex) {
+        if (fdIndex == FD_STANDARD_INPUT || fdIndex == FD_STANDARD_OUTPUT) {
+            // don't do anything, and return successfully.
+            return 0;
+        }
+        if (fdIndex >= 0 && fdIndex < MAXFD) {
+            FileDescriptor fd = fds[fdIndex];
+            return fd.closeFile();
+        }
+        Lib.debug(dbgProcess, "handleClose unsuccessful");
+        return -1;
+    }
+
+    private int handleRead(int fd, int b, int size) {
+        if (!isValidFileDescriptor(fd))
+            return -1;
+
+        FileDescriptor fdesc = fds[fd];
+        byte[] buf = new byte[size];
+        if (fdesc.file == null)
+            return -1;
+        if (fdesc.file.read(buf, 0, size) == -1)
+            return -1;
+        return writeVirtualMemory(b, buf);
+    }
+
+    private int handleWrite(int fd, int b, int size) {
+        if (!isValidFileDescriptor(fd))
+            return -1;
+
+        byte[] buf = new byte[size];
+        int readbytes = readVirtualMemory(b, buf);
+        if (readbytes != size)
+            return -1;
+        
+        FileDescriptor fdesc = fds[fd];
+        if (fdesc.file != null) {
+            return fdesc.file.write(buf, 0, size);
+        }
+        return -1;
+    }
+
+    private int handleUnlink(int a0) {
+        String filename = readVirtualMemoryString(a0, MAX_ARG_LENGTH);
+        if (isNullOrEmpty(filename))
+            return -1;
+        int fdIndex = findFileDescriptor(filename);
+        if (fdIndex == -1)
+            return -1;
+
+        // this index is either existing or new free fd.
+        FileDescriptor fd = fds[fdIndex];
+        if (!fd.isFree) {
+            // matching fd is not close.
+            fd.removeWhenClosed = true;
+            return 0;
+        }
+
+        // fd is free that means, this file is already closed or didn't get
+        // opened by this process.
+        boolean r = Machine.stubFileSystem().remove(filename);
+        return (r) ? 0 : -1;
+    }
 
     private static final int
         syscallHalt = 0,
@@ -388,14 +482,25 @@ public class UserProcess {
      * @return	the value to be returned to the user.
      */
     public int handleSyscall(int syscall, int a0, int a1, int a2, int a3) {
+	Lib.debug(dbgProcess, "calling system call: " + syscall);
 	switch (syscall) {
 	case syscallHalt:
 	    return handleHalt();
-
-
-	default:
-	    Lib.debug(dbgProcess, "Unknown syscall " + syscall);
-	    Lib.assertNotReached("Unknown system call!");
+        case syscallCreate:
+            return handleCreate(a0);
+        case syscallOpen:
+            return handleOpen(a0);
+        case syscallClose:
+            return handleClose(a0);
+        case syscallRead:
+            return handleRead(a0, a1, a2);
+        case syscallWrite:
+            return handleWrite(a0, a1, a2);
+        case syscallUnlink:
+            return handleUnlink(a0);
+        default:
+	        Lib.debug(dbgProcess, "Unknown syscall " + syscall);
+            Lib.assertNotReached("Unknown system call!");
 	}
 	return 0;
     }
@@ -421,13 +526,124 @@ public class UserProcess {
 				       );
 	    processor.writeRegister(Processor.regV0, result);
 	    processor.advancePC();
-	    break;				       
-				       
+	    break;
 	default:
 	    Lib.debug(dbgProcess, "Unexpected exception: " +
 		      Processor.exceptionNames[cause]);
 	    Lib.assertNotReached("Unexpected exception");
 	}
+    }
+
+    /** 
+     * This returns a file descriptor for name file. If the file,
+     * hasn't be opened before, then get an unused file descriptor,
+     * otherwise reuse file descriptor.
+     */
+    private int findFileDescriptor(String name) {
+        if (name == null)
+            return -1;
+
+        // search for matching file descriptor.
+        for (int i = 0; i < MAXFD; i++) {
+            FileDescriptor fd = fds[i];
+            if (fd.file != null && name.equals(fd.file.getName())) {
+                return i;
+            }
+        }
+
+        // find empty file descriptor
+        return findEmptyFileDescriptor();
+    }
+
+    private int findEmptyFileDescriptor() {
+        for (int i = 0; i < MAXFD; i++) {
+            FileDescriptor fd = fds[i];
+            if (fd.isFree) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private int openFileForUser(String name, boolean create) {
+        /* find an free file descriptor for the process */
+        int fdIndex = findFileDescriptor(name);
+        if (fdIndex != -1) {
+            /* if already opened then don't do anything otherwise open file
+             * and attach this file descriptor to it
+             */
+            FileDescriptor fd = fds[fdIndex];
+            if (fd.isFree) {
+                FileSystem fs = Machine.stubFileSystem();
+                OpenFile file = fs.open(name, create);
+                if (file != null) {
+                    fd.openFile(file);
+                    return fdIndex;
+                }
+            } else {
+                /* already opened */
+                return fdIndex;
+            }
+        }
+        return -1;
+    }
+
+    private boolean isValidFileDescriptor(int fdIndex) {
+        if (fdIndex >= 0 && fdIndex < MAXFD)
+            return true;
+        return false;
+    }
+
+    private  boolean isStandardFileDescriptor(int fdIndex) {
+        if (fdIndex == FD_STANDARD_INPUT || fdIndex == FD_STANDARD_OUTPUT)
+            return true;
+        return false;
+    }
+
+    private boolean isNullOrEmpty(String s) {
+        return (s == null || s.trim().equals(""));
+    }
+
+    private class FileDescriptor {
+        OpenFile file;
+        boolean isFree;
+        boolean removeWhenClosed;
+
+        public FileDescriptor() {
+            isFree = true;
+            removeWhenClosed = false;
+        }
+
+        // create a file descriptor with standard io
+        public void openStandardFileDescriptor(int i) {
+            OpenFile f = null;
+            if (i == FD_STANDARD_INPUT)
+                f = UserKernel.console.openForReading();
+            else if (i == FD_STANDARD_OUTPUT)
+                f = UserKernel.console.openForWriting();
+            
+            if (f != null)
+                this.openFile(f);
+        }
+
+        public void openFile(OpenFile file) {
+            this.file = file;
+            this.isFree = false;
+            this.removeWhenClosed = false;
+        }
+
+        public int closeFile() {
+            boolean success = false;
+            if (this.file != null) {
+                file.close();
+                isFree = true;
+                success = true;
+                if (removeWhenClosed)
+                    success = Machine.stubFileSystem().remove(file.getName());
+                removeWhenClosed = false;
+            }
+            return (success) ? 0 : -1;
+        }
     }
 
     /** The program being run by this process. */
@@ -441,9 +657,17 @@ public class UserProcess {
     /** The number of pages in the program's stack. */
     protected final int stackPages = 8;
     
+    /** This process's used file descriptor. */
+    protected FileDescriptor[] fds;
     private int initialPC, initialSP;
     private int argc, argv;
 	
+    /** Number of max file descriptors supported per process */
+    private static final int MAXFD = 16;
+    /** Max length of arguments of syscall */
+    private static final int MAX_ARG_LENGTH = 256;
+    private static final int FD_STANDARD_INPUT = 0;
+    private static final int FD_STANDARD_OUTPUT = 1;
     private static final int pageSize = Processor.pageSize;
     private static final char dbgProcess = 'a';
 }
