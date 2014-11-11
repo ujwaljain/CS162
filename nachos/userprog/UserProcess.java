@@ -23,10 +23,8 @@ public class UserProcess {
      * Allocate a new process.
      */
     public UserProcess() {
-	int numPhysPages = Machine.processor().getNumPhysPages();
-	pageTable = new TranslationEntry[numPhysPages];
-	for (int i=0; i<numPhysPages; i++)
-	    pageTable[i] = new TranslationEntry(i,i, true,false,false,false);
+        int numPhysPages = Machine.processor().getNumPhysPages();
+        pageTable = new TranslationEntry[numPhysPages];
 
         fds = new FileDescriptor[MAXFD];
         for (int i=0; i<MAXFD; i++) {
@@ -134,21 +132,27 @@ public class UserProcess {
      *			the array.
      * @return	the number of bytes successfully transferred.
      */
-    public int readVirtualMemory(int vaddr, byte[] data, int offset,
-				 int length) {
+	public int readVirtualMemory(int vaddr, byte[] data, int offset,
+	int length) {
 	Lib.assertTrue(offset >= 0 && length >= 0 && offset+length <= data.length);
 
 	byte[] memory = Machine.processor().getMemory();
-	
-	// for now, just assume that virtual addresses equal physical addresses
-	if (vaddr < 0 || vaddr >= memory.length)
-	    return 0;
 
-	int amount = Math.min(length, memory.length-vaddr);
-	System.arraycopy(memory, vaddr, data, offset, amount);
+	int vpn = Processor.pageFromAddress(vaddr);
+	int off = Processor.offsetFromAddress(vaddr);
+	TranslationEntry entry = pageTable[vpn];
+	int ppn = entry.ppn;
+	if (entry == null || !entry.valid)
+		return -1;
+	if (ppn < 0 || ppn >= Machine.processor().getNumPhysPages())
+		return -1;
+	entry.used = true;
+	int paddr = Processor.makeAddress(ppn, off);
+	int amount = Math.min(length, memory.length-paddr);
+	System.arraycopy(memory, paddr, data, offset, amount);
 
 	return amount;
-    }
+	}
 
     /**
      * Transfer all data from the specified array to this process's virtual
@@ -177,21 +181,26 @@ public class UserProcess {
      *			virtual memory.
      * @return	the number of bytes successfully transferred.
      */
-    public int writeVirtualMemory(int vaddr, byte[] data, int offset,
-				  int length) {
+	public int writeVirtualMemory(int vaddr, byte[] data, int offset,
+	int length) {
 	Lib.assertTrue(offset >= 0 && length >= 0 && offset+length <= data.length);
 
 	byte[] memory = Machine.processor().getMemory();
-	
-	// for now, just assume that virtual addresses equal physical addresses
-	if (vaddr < 0 || vaddr >= memory.length)
-	    return 0;
-
-	int amount = Math.min(length, memory.length-vaddr);
-	System.arraycopy(data, offset, memory, vaddr, amount);
+	int vpn = Processor.pageFromAddress(vaddr);
+	int off = Processor.offsetFromAddress(vaddr);
+	TranslationEntry entry = pageTable[vpn];
+	int ppn = entry.ppn;
+	if (entry == null || !entry.valid)
+		return -1;
+	if (ppn < 0 || ppn >= Machine.processor().getNumPhysPages())
+		return -1;
+	entry.used = true;
+	int paddr = Processor.makeAddress(ppn, off);
+	int amount = Math.min(length, memory.length-paddr);
+	System.arraycopy(data, offset, memory, paddr, amount);
 
 	return amount;
-    }
+	}
 
     /**
      * Load the executable with the specified name into this process, and
@@ -257,6 +266,10 @@ public class UserProcess {
 	// and finally reserve 1 page for arguments
 	numPages++;
 
+	// before loading sections, allocate physical memory
+	for (int i = 0; i < numPages; i++)
+	    getPage(i);
+
 	if (!loadSections())
 	    return false;
 
@@ -305,8 +318,11 @@ public class UserProcess {
 	    for (int i=0; i<section.getLength(); i++) {
 		int vpn = section.getFirstVPN()+i;
 
-		// for now, just assume virtual addresses=physical addresses
-		section.loadPage(i, vpn);
+		/* get free pages from kernel */
+		TranslationEntry page = getPage(vpn);
+		page.readOnly = section.isReadOnly();
+		Lib.debug(dbgProcess, "loading section with vpn: " + vpn + " and spn: " + page.ppn);
+		section.loadPage(i, page.ppn);
 	    }
 	}
 	
@@ -341,6 +357,23 @@ public class UserProcess {
 	processor.writeRegister(Processor.regA0, argc);
 	processor.writeRegister(Processor.regA1, argv);
     }
+
+    /**
+     * Create a page table entry for vpn if it doesn't exists, otherwise
+     * gets that page.
+     */
+	private TranslationEntry getPage(int vpn) {
+		if (pageTable[vpn] == null) {
+			int ppn = UserKernel.getFreePage();
+			if (ppn == -1) {
+				Lib.debug(dbgProcess, "Error: Can't create page");
+				// TODO: handle this error case.
+			}
+			pageTable[vpn] = new TranslationEntry(vpn, ppn, true,
+				false, false, false);
+		}
+		return pageTable[vpn];
+	}
 
     /**
      * Handle the halt() system call. 

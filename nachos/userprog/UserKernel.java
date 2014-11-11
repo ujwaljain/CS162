@@ -4,6 +4,8 @@ import nachos.machine.*;
 import nachos.threads.*;
 import nachos.userprog.*;
 
+import java.util.List;
+import java.util.ArrayList;
 /**
  * A kernel that can support multiple user processes.
  */
@@ -23,7 +25,12 @@ public class UserKernel extends ThreadedKernel {
 	super.initialize(args);
 
 	console = new SynchConsole(Machine.console());
-	
+	freePages = new ArrayList<Integer>();
+	pageLock = new Lock();
+	// initialize all user memory is free
+	for (int i = 0; i < Machine.processor().getNumPhysPages(); i++)
+		freePages.add(i);
+
 	Machine.processor().setExceptionHandler(new Runnable() {
 		public void run() { exceptionHandler(); }
 	    });
@@ -60,6 +67,27 @@ public class UserKernel extends ThreadedKernel {
 	
 	return ((UThread) KThread.currentThread()).process;
     }
+
+	/**
+	 * @return an available page to be added in pageTable
+	 */
+	public static int getFreePage() {
+		pageLock.acquire();
+		int page = -1;
+		if (freePages != null || !freePages.isEmpty())
+			page = freePages.remove(0);
+		pageLock.release();
+		return page;
+	}
+
+	/**
+	 * Called when userprocess releases page to be added to free memory pool
+	 */
+	public static void putFreePage(int page) {
+		pageLock.acquire();
+		freePages.add(page);
+		pageLock.release();
+	}
 
     /**
      * The exception handler. This handler is called by the processor whenever
@@ -110,6 +138,9 @@ public class UserKernel extends ThreadedKernel {
     /** Globally accessible reference to the synchronized console. */
     public static SynchConsole console;
 
+    private static Lock pageLock;
+    /** Gobal list of available pages in the processor */
+    private static List<Integer> freePages;
     // dummy variables to make javac smarter
     private static Coff dummy1 = null;
 }
