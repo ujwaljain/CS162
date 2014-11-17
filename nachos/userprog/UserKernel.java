@@ -6,6 +6,9 @@ import nachos.userprog.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A kernel that can support multiple user processes.
  */
@@ -27,10 +30,12 @@ public class UserKernel extends ThreadedKernel {
 	console = new SynchConsole(Machine.console());
 	freePages = new ArrayList<Integer>();
 	pageLock = new Lock();
+    processLock = new Lock();
 	// initialize all user memory is free
 	for (int i = 0; i < Machine.processor().getNumPhysPages(); i++)
 		freePages.add(i);
 
+    processMap = new HashMap<Integer, UserProcess>();
 	Machine.processor().setExceptionHandler(new Runnable() {
 		public void run() { exceptionHandler(); }
 	    });
@@ -122,7 +127,7 @@ public class UserKernel extends ThreadedKernel {
 
 	UserProcess process = UserProcess.newUserProcess();
 	
-	String shellProgram = Machine.getShellProgramName();	
+	String shellProgram = Machine.getShellProgramName();
 	Lib.assertTrue(process.execute(shellProgram, new String[] { }));
 
 	KThread.currentThread().finish();
@@ -135,12 +140,40 @@ public class UserKernel extends ThreadedKernel {
 	super.terminate();
     }
 
+    /**
+     * Assign processId to a userProcess
+     */ 
+    public static int assignProcessId(UserProcess p) {
+        processLock.acquire();
+        processMap.put(processIdCounter, p);
+        int tmp = processIdCounter++;
+        processLock.release();
+        return tmp;
+    }
+
+    public static UserProcess getProcessUsingPid(int pid) {
+        return processMap.get(pid);
+    }
+
+    /**
+     * Remove process from the kernel, process finished.
+     */
+    public static void removeProcessId(int processId) {
+        processMap.remove(processId);
+    }
+
     /** Globally accessible reference to the synchronized console. */
     public static SynchConsole console;
 
     private static Lock pageLock;
+    private static Lock processLock;
     /** Gobal list of available pages in the processor */
     private static List<Integer> freePages;
     // dummy variables to make javac smarter
     private static Coff dummy1 = null;
+    /* process id counter */
+    private static int processIdCounter = 1;
+    /* Map of processId and user process */
+    private static Map<Integer, UserProcess> processMap;
+
 }

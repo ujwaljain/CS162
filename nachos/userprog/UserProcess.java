@@ -5,6 +5,8 @@ import nachos.threads.*;
 import nachos.userprog.*;
 
 import java.io.EOFException;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Encapsulates the state of a user process that is not contained in its
@@ -32,6 +34,10 @@ public class UserProcess {
             if (isStandardFileDescriptor(i))
                 fds[i].openStandardFileDescriptor(i);
         }
+        processId = UserKernel.assignProcessId(this);
+        childProcesses = new ArrayList<Integer>();
+        isFinished = false;
+        processStatus = 0;
     }
     
     /**
@@ -56,8 +62,9 @@ public class UserProcess {
     public boolean execute(String name, String[] args) {
 	if (!load(name, args))
 	    return false;
-	
-	new UThread(this).setName(name).fork();
+
+    thread = new UThread(this);
+    thread.setName(name).fork();
 
 	return true;
     }
@@ -333,7 +340,16 @@ public class UserProcess {
      * Release any resources allocated by <tt>loadSections()</tt>.
      */
     protected void unloadSections() {
-    }    
+        // clean page table
+        for (int i = 0; i < numPages; i++) {
+            TranslationEntry e = pageTable[i];
+            if (e != null) {
+                int ppn = e.ppn;
+                e.valid = false;
+                UserKernel.putFreePage(ppn);
+            } 
+        }
+    }
 
     /**
      * Initialize the processor's registers in preparation for running the
@@ -417,6 +433,10 @@ public class UserProcess {
         }
         if (fdIndex >= 0 && fdIndex < MAXFD) {
             FileDescriptor fd = fds[fdIndex];
+            if (fd.isFree) {
+                // already closed, don't do anything.
+                return 0;
+            }
             return fd.closeFile();
         }
         Lib.debug(dbgProcess, "handleClose unsuccessful");
@@ -431,9 +451,10 @@ public class UserProcess {
         byte[] buf = new byte[size];
         if (fdesc.file == null)
             return -1;
-        if (fdesc.file.read(buf, 0, size) == -1)
+        int readbytes = fdesc.file.read(buf, 0, size);
+        if (readbytes == -1)
             return -1;
-        return writeVirtualMemory(b, buf);
+        return writeVirtualMemory(b, buf, 0, readbytes);
     }
 
     private int handleWrite(int fd, int b, int size) {
@@ -447,7 +468,7 @@ public class UserProcess {
         
         FileDescriptor fdesc = fds[fd];
         if (fdesc.file != null) {
-            return fdesc.file.write(buf, 0, size);
+            return fdesc.file.write(buf, 0, readbytes);
         }
         return -1;
     }
@@ -472,6 +493,81 @@ public class UserProcess {
         // opened by this process.
         boolean r = Machine.stubFileSystem().remove(filename);
         return (r) ? 0 : -1;
+    }
+
+    private int handleExec(int a0, int a1, int a2) {
+        String filename = readVirtualMemoryString(a0, MAX_ARG_LENGTH);
+        if (isNullOrEmpty(filename))
+            return -1;
+        if (a1 <= 0)
+            return -1;
+        String[] processArgs = new String[a1];
+        byte[] pointerBytes = new byte[4];
+        for (int i = 0; i < a1; i++) {
+            // argv is array of char* pointers, so read pointers first and then
+            // individual strings.
+            int readBytes = readVirtualMemory(a2 + i*4, pointerBytes);
+            if (readBytes == -1)
+                return -1;
+            int pointerAddr = Lib.bytesToInt(pointerBytes, 0);
+            processArgs[i] = readVirtualMemoryString(pointerAddr, MAX_ARG_LENGTH);
+        }
+
+        UserProcess newProcess = UserProcess.newUserProcess();
+        newProcess.processId = UserKernel.assignProcessId(newProcess);
+        childProcesses.add(newProcess.processId);
+        newProcess.parentProcessId = this.processId;
+        return (newProcess.execute(filename, processArgs)) ? 
+                    newProcess.processId : -1;
+    }
+
+    private void handleExit(int status) {
+        isFinished = true;
+        /** Clean process state
+         *  1. Clean File Descriptors.
+         *  2. Free up page tables.
+         *  3. Free up child processes.
+         *  4. Free up Parent Process.
+         *  5. Kill this process.
+         */
+        for (int i = 0; i < MAXFD; i++) {
+            handleClose(i);
+        }
+        unloadSections();
+        for (Integer childPid : childProcesses) {
+            UserProcess childProcess = UserKernel.getProcessUsingPid(childPid);
+            childProcess.parentProcessId = -1;
+        }
+        childProcesses = null;
+        UserProcess parentProcess = UserKernel.getProcessUsingPid(parentProcessId);
+        if (parentProcess != null) {
+            List<Integer> siblingProcesses = parentProcess.childProcesses;
+            siblingProcesses.remove(siblingProcesses.indexOf(processId));
+        }
+        if (processId == 1) {
+            // ROOT process
+            Kernel.kernel.terminate();
+        } else {
+            processStatus = status;
+            KThread.finish();
+        }
+        Lib.assertNotReached();
+    }
+
+    private int handleJoin(int pid, int statusP) {
+        if (!childProcesses.contains(pid))
+            return -1;
+        UserProcess joinedProcess = UserKernel.getProcessUsingPid(pid);
+        UThread joinedThread = joinedProcess.thread;
+        joinedThread.join();
+        Lib.assertTrue(joinedProcess.isFinished);
+        // disown child process
+        childProcesses.remove(childProcesses.indexOf(pid));
+        byte[] buf = Lib.bytesFromInt(joinedProcess.processStatus);
+        int writeByte = writeVirtualMemory(statusP, buf);
+        if (writeByte == -1)
+            return -1;
+        return (joinedProcess.processStatus == -1) ? 0 : 1;
     }
 
     private static final int
@@ -531,6 +627,13 @@ public class UserProcess {
             return handleWrite(a0, a1, a2);
         case syscallUnlink:
             return handleUnlink(a0);
+        case syscallExec:
+            return handleExec(a0, a1, a2);
+        case syscallExit:
+            handleExit(a0);
+            break;
+        case syscallJoin:
+            return handleJoin(a0, a1);
         default:
 	        Lib.debug(dbgProcess, "Unknown syscall " + syscall);
             Lib.assertNotReached("Unknown system call!");
@@ -689,12 +792,19 @@ public class UserProcess {
 
     /** The number of pages in the program's stack. */
     protected final int stackPages = 8;
-    
+   
+    /** Underlying UThread */
+    public UThread thread;
+    /** Process status */
+    public int processStatus;
+    public boolean isFinished;
     /** This process's used file descriptor. */
     protected FileDescriptor[] fds;
     private int initialPC, initialSP;
     private int argc, argv;
-	
+	public int processId;
+    public int parentProcessId;
+    private List<Integer> childProcesses;
     /** Number of max file descriptors supported per process */
     private static final int MAXFD = 16;
     /** Max length of arguments of syscall */
