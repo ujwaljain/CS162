@@ -65,7 +65,15 @@ public class SocketServer {
      * @throws IOException if unable create and bind a ServerSocket
      */
     public void connect() throws IOException {
-        // implement me
+        try {
+            InetSocketAddress addr = new InetSocketAddress(hostname, port);
+            server = new ServerSocket();
+            server.bind(addr);
+        } catch (IOException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            // TODO: don't do anything for now.
+        }
     }
 
     /**
@@ -77,7 +85,9 @@ public class SocketServer {
      *         listening for or servicing requests
      */
     public void start() throws IOException {
-     // implement me
+        Socket socket = server.accept();
+        handler.handle(socket);
+        stopped = false;
     }
 
     /**
@@ -86,7 +96,12 @@ public class SocketServer {
      * TIMEOUT milliseconds later. That logic should be implemented in start().
      */
     public void stop() {
-        stopped = true;
+        try {
+            server.close();
+            stopped = true;
+        } catch (Exception e) {
+            //TODO: handle IOException
+        }
     }
 
 }

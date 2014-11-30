@@ -11,6 +11,7 @@ import static kvstore.KVConstants.RESP;
 import static kvstore.KVConstants.SUCCESS;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -21,6 +22,7 @@ public class KVClient implements KeyValueInterface {
 
     public String server;
     public int port;
+    public Socket socket;
 
     /**
      * Constructs a KVClient connected to a server.
@@ -40,8 +42,14 @@ public class KVClient implements KeyValueInterface {
      * @throws KVException if unable to create or connect socket
      */
     public Socket connectHost() throws KVException {
-        // implement me
-        return null;
+        try {
+            System.out.println("Client: connectHost: ");
+            socket = new Socket(server, port);
+            System.out.println("connectHost successful");
+        } catch (Exception ex) {
+            // TODO: handle UnknownHostException here.
+        }
+        return socket;
     }
 
     /**
@@ -51,7 +59,11 @@ public class KVClient implements KeyValueInterface {
      * @param  sock Socket to be closed
      */
     public void closeHost(Socket sock) {
-        // implement me
+        try {
+            sock.close();
+        } catch (Exception e) {
+            // TODO: handle IOException
+        }
     }
 
     /**
@@ -62,7 +74,14 @@ public class KVClient implements KeyValueInterface {
      */
     @Override
     public void put(String key, String value) throws KVException {
-        // implement me
+        try {
+            PrintWriter out =
+                new PrintWriter(socket.getOutputStream(), true);
+            out.println("Key: " + key + " Value: " + value);
+            System.out.println("Put operation successful");
+        } catch (Exception ex) {
+            // TODO: handle IOException
+        }
     }
 
     /**

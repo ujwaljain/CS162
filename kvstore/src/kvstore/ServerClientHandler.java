@@ -6,7 +6,9 @@ import static kvstore.KVConstants.PUT_REQ;
 import static kvstore.KVConstants.RESP;
 import static kvstore.KVConstants.SUCCESS;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 /**
@@ -35,7 +37,8 @@ public class ServerClientHandler implements NetworkHandler {
      * @param connections number of threads in threadPool to service requests
      */
     public ServerClientHandler(KVServer kvServer, int connections) {
-        // implement me
+        this.kvServer = kvServer;
+        this.threadPool = new ThreadPool(connections);
     }
 
     /**
@@ -46,7 +49,13 @@ public class ServerClientHandler implements NetworkHandler {
      */
     @Override
     public void handle(Socket client) {
-        // implement me
+        try {
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(client.getInputStream()));
+            System.out.println("Read from Socket: " + in.readLine());
+        } catch (Exception e) {
+            System.out.println("Error handling socket: ");
+        }
     }
     
     // implement me

@@ -18,6 +18,7 @@ public class SampleClient {
             System.out.println("Looking for server at " + hostname);
 
             KVClient client = new KVClient(hostname, 8080);
+            client.connectHost();
 
             System.out.println("put(\"foo\", \"bar\")");
             client.put("foo", "bar");
