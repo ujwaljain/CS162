@@ -79,7 +79,19 @@ public class KVMessage implements Serializable {
      *         KVConstants.java for possible KVException messages.
      */
     public KVMessage(Socket sock, int timeout) throws KVException {
-        // implement me
+        // TODO: handle timeout.
+        try {
+            NoCloseInputStream in = new NoCloseInputStream(sock.getInputStream());
+            KVMessageType serializedKvm = this.unmarshal(in);
+            this.msgType = serializedKvm.getType();
+            this.key = serializedKvm.getKey();
+            this.value = serializedKvm.getValue();
+            this.message = serializedKvm.getMessage();
+        } catch (JAXBException e) {
+            throw new KVException(KVConstants.ERROR_PARSER);
+        } catch (IOException e) {
+            throw new KVException(KVConstants.ERROR_COULD_NOT_RECEIVE_DATA);
+        }
     }
 
     /**
@@ -88,9 +100,11 @@ public class KVMessage implements Serializable {
      * @param kvm KVMessage with fields to copy
      */
     public KVMessage(KVMessage kvm) {
-        // implement me
+        this.msgType = kvm.getMsgType();
+        this.key = kvm.getKey();
+        this.value = kvm.getValue();
+        this.message = kvm.getMessage();
     }
-
     
 
     /**
@@ -102,8 +116,39 @@ public class KVMessage implements Serializable {
     private JAXBElement<KVMessageType> getXMLRoot() throws JAXBException, KVException {
         ObjectFactory factory = new ObjectFactory();
         KVMessageType xmlStore = factory.createKVMessageType();
-        //implement me
+        boolean validKey = !isNullOrEmpty(key);
+        boolean validValue = !isNullOrEmpty(value);
+        boolean validMsg = !isNullOrEmpty(message);
+        boolean isGetReq = KVConstants.GET_REQ.equals(msgType);
+        boolean isPutReq = KVConstants.PUT_REQ.equals(msgType);
+        boolean isDelReq = KVConstants.DEL_REQ.equals(msgType);
+        boolean isResp = KVConstants.RESP.equals(msgType);
+        boolean validMsgType = isGetReq || isPutReq || isDelReq || isResp;
+
+        if (!validMsgType) {
+            throw new KVException(KVConstants.ERROR_INVALID_FORMAT);
+        } else if (isGetReq && !validKey) {
+            throw new KVException(KVConstants.ERROR_INVALID_KEY);
+        } else if (isPutReq && !validKey) {
+            throw new KVException(KVConstants.ERROR_INVALID_KEY);
+        } else if (isPutReq && !validValue) {
+            throw new KVException(KVConstants.ERROR_INVALID_VALUE);
+        } else if (isDelReq && !validKey) {
+            throw new KVException(KVConstants.ERROR_INVALID_KEY);
+        } else if (isResp) {
+            // either message is set or key/value
+            if (!validMsg && !(validKey && validValue))
+                throw new KVException(KVConstants.ERROR_INVALID_FORMAT);
+        }
+        xmlStore.setKey(key);
+        xmlStore.setValue(value);
+        xmlStore.setType(msgType);
+        xmlStore.setMessage(message);
         return factory.createKVMessage(xmlStore);
+    }
+
+    private boolean isNullOrEmpty(String s) {
+        return (s == null || s.trim().length() == 0);
     }
 
     /**
@@ -168,7 +213,17 @@ public class KVMessage implements Serializable {
      *         ERROR_COULD_NOT_SEND_DATA
      */
     public void sendMessage(Socket sock) throws KVException {
-        // implement me
+        try {
+            String serializedXml = this.toXML();
+            PrintWriter out = new PrintWriter(sock.getOutputStream(), true);
+            out.print(serializedXml);
+            out.flush();
+            sock.shutdownOutput();
+        } catch (IOException e) {
+            throw new KVException(KVConstants.ERROR_COULD_NOT_SEND_DATA);
+        } catch (KVException e) {
+            throw e;
+        }
     }
 
     public String getKey() {
@@ -198,7 +253,6 @@ public class KVMessage implements Serializable {
     public String getMsgType() {
         return msgType;
     }
-
 
     @Override
     public String toString() {

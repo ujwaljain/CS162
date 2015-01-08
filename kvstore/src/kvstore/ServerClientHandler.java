@@ -50,9 +50,8 @@ public class ServerClientHandler implements NetworkHandler {
     @Override
     public void handle(Socket client) {
         try {
-            BufferedReader in = new BufferedReader(
-                new InputStreamReader(client.getInputStream()));
-            System.out.println("Read from Socket: " + in.readLine());
+            KVMessage kvm = new KVMessage(client);
+            // TODO: create a job and enqueue in threadpool.
         } catch (Exception e) {
             System.out.println("Error handling socket: ");
         }

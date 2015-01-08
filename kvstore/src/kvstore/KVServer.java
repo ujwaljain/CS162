@@ -41,7 +41,8 @@ public class KVServer implements KeyValueInterface {
      */
     @Override
     public void put(String key, String value) throws KVException {
-        // implement me
+        dataStore.put(key, value);
+        // TODO: KVCache 
     }
 
     /**
@@ -54,8 +55,8 @@ public class KVServer implements KeyValueInterface {
      */
     @Override
     public String get(String key) throws KVException {
-        // implement me
-        return null;
+        // TODO: KVCache
+        return dataStore.get(key);
     }
 
     /**
@@ -66,7 +67,8 @@ public class KVServer implements KeyValueInterface {
      */
     @Override
     public void del(String key) throws KVException {
-        // implement me
+        // TODO: KVCache
+        dataStore.del(key);
     }
 
     /**
@@ -78,8 +80,13 @@ public class KVServer implements KeyValueInterface {
      * @param key key to check for membership in store
      */
     public boolean hasKey(String key) {
-        // implement me
-        return false;
+        // KVCache: TODO:
+        try {
+            String value = dataStore.get(key);
+            return true;
+        } catch (KVException ex) {
+            return false;
+        }
     }
 
     /** This method is purely for convenience and will not be tested. */

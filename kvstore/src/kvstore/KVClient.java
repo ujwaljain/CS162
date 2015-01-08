@@ -22,7 +22,6 @@ public class KVClient implements KeyValueInterface {
 
     public String server;
     public int port;
-    public Socket socket;
 
     /**
      * Constructs a KVClient connected to a server.
@@ -42,12 +41,11 @@ public class KVClient implements KeyValueInterface {
      * @throws KVException if unable to create or connect socket
      */
     public Socket connectHost() throws KVException {
+        Socket socket;
         try {
-            System.out.println("Client: connectHost: ");
             socket = new Socket(server, port);
-            System.out.println("connectHost successful");
         } catch (Exception ex) {
-            // TODO: handle UnknownHostException here.
+            throw new KVException(KVConstants.ERROR_COULD_NOT_CONNECT);
         }
         return socket;
     }
@@ -74,13 +72,20 @@ public class KVClient implements KeyValueInterface {
      */
     @Override
     public void put(String key, String value) throws KVException {
+        Socket socket = null;
         try {
-            PrintWriter out =
-                new PrintWriter(socket.getOutputStream(), true);
-            out.println("Key: " + key + " Value: " + value);
-            System.out.println("Put operation successful");
-        } catch (Exception ex) {
-            // TODO: handle IOException
+            socket = connectHost();
+            KVMessage kvm = new KVMessage(KVConstants.PUT_REQ);
+            kvm.setKey(key);
+            kvm.setValue(value);
+            kvm.sendMessage(socket);
+
+            // get response from socket.
+            KVMessage resp = new KVMessage(socket);
+        } catch (KVException ex) {
+            throw ex;
+        } finally {
+            closeHost(socket);
         }
     }
 
@@ -93,8 +98,23 @@ public class KVClient implements KeyValueInterface {
      */
     @Override
     public String get(String key) throws KVException {
-        // implement me
-        return null;
+        Socket socket = null;
+        try {
+            socket = connectHost();
+            KVMessage kvm = new KVMessage(KVConstants.GET_REQ);
+            kvm.setKey(key);
+            kvm.sendMessage(socket);
+
+            // get response from socket.
+            KVMessage resp = new KVMessage(socket);
+            if (resp.getMessage() != null)
+                throw new KVException(resp);
+            return resp.getValue();
+        } catch (KVException ex) {
+            throw ex;
+        } finally {
+            closeHost(socket);
+        }
     }
 
     /**
@@ -105,8 +125,22 @@ public class KVClient implements KeyValueInterface {
      */
     @Override
     public void del(String key) throws KVException {
-        // implement me
+        Socket socket = null;
+        try {
+            socket = connectHost();
+            KVMessage kvm = new KVMessage(KVConstants.DEL_REQ);
+            kvm.setKey(key);
+            kvm.sendMessage(socket);
+
+            // get response from socket
+            KVMessage resp = new KVMessage(socket);
+            String msg = resp.getMessage();
+            if (msg == null || !msg.equals(KVConstants.SUCCESS))
+                throw new KVException(resp);
+        } catch (KVException ex) {
+            throw ex;
+        } finally {
+            closeHost(socket);
+        }
     }
-
-
 }
