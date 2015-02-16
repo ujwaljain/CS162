@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -22,7 +24,9 @@ import kvstore.xml.ObjectFactory;
  * the eviction policy.
  */
 public class KVCache implements KeyValueInterface {
-
+    private List<CacheSet> cache;
+    private List<Lock> setLocks;
+    private int numSets, maxElemsPerSet;
     /**
      * Constructs a second-chance-replacement cache.
      *
@@ -31,7 +35,15 @@ public class KVCache implements KeyValueInterface {
      */
     @SuppressWarnings("unchecked")
     public KVCache(int numSets, int maxElemsPerSet) {
-        // implement me
+        this.numSets = numSets;
+        this.maxElemsPerSet = maxElemsPerSet;
+        cache = new ArrayList<CacheSet>(numSets);
+        setLocks = new ArrayList<Lock>(numSets);
+        for (int i = 0; i < numSets; i++) {
+            CacheSet cacheSet = new CacheSet(maxElemsPerSet);
+            cache.add(cacheSet);
+            setLocks.add(new ReentrantLock());
+        }
     }
 
     /**
@@ -45,8 +57,9 @@ public class KVCache implements KeyValueInterface {
      */
     @Override
     public String get(String key) {
-        // implement me
-        return null;
+        int s = getCacheSetForKey(key);
+        CacheEntry e = cache.get(s).getCacheEntryForKey(key);
+        return (e != null) ? e.value : null;
     }
 
     /**
@@ -67,7 +80,8 @@ public class KVCache implements KeyValueInterface {
      */
     @Override
     public void put(String key, String value) {
-        // implement me
+        CacheSet set = cache.get(getCacheSetForKey(key));
+        set.putCacheEntryForKey(key, value);
     }
 
     /**
@@ -79,7 +93,8 @@ public class KVCache implements KeyValueInterface {
      */
     @Override
     public void del(String key) {
-        // implement me
+        CacheSet set = cache.get(getCacheSetForKey(key));
+        set.deleteCacheEntryForKey(key);
     }
 
     /**
@@ -92,19 +107,17 @@ public class KVCache implements KeyValueInterface {
      */
 
     public Lock getLock(String key) {
-    	return null;
-    	//implement me
-
+        int setIndex = getCacheSetForKey(key);
+        return setLocks.get(setIndex);
     }
-    
+
     /**
      * Get the size of a given set in the cache.
      * @param cacheSet Which set.
      * @return Size of the cache set.
      */
     int getCacheSetSize(int cacheSet) {
-        // implement me
-        return -1;
+        return cache.get(cacheSet).getSetSize();
     }
 
     private void marshalTo(OutputStream os) throws JAXBException {
@@ -119,7 +132,19 @@ public class KVCache implements KeyValueInterface {
     private JAXBElement<KVCacheType> getXMLRoot() throws JAXBException {
         ObjectFactory factory = new ObjectFactory();
         KVCacheType xmlCache = factory.createKVCacheType();
-            // implement me
+        for (int i = 0; i < numSets; i++) {
+            KVSetType setType = new KVSetType();
+            CacheSet cs = cache.get(i);
+            for (int a = 0; a < getCacheSetSize(i); a++) {
+                KVCacheEntry e = new KVCacheEntry();
+                CacheEntry ce = cs.cacheSet.get(a);
+                e.setKey(ce.key);
+                e.setValue(ce.value);
+                e.setIsReferenced(ce.isUsed ? "True" : "False");
+                setType.getCacheEntry().add(e);
+            }
+            xmlCache.getSet().add(setType);
+        }
         return factory.createKVCache(xmlCache);
     }
 
@@ -127,12 +152,11 @@ public class KVCache implements KeyValueInterface {
      * Serialize this store to XML. See spec for details on output format.
      */
     public String toXML() {
-        // implement me
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             marshalTo(os);
         } catch (JAXBException e) {
-            //e.printStackTrace();
+            // ignore
         }
         return os.toString();
     }
@@ -141,4 +165,111 @@ public class KVCache implements KeyValueInterface {
         return this.toXML();
     }
 
+    // Utility methods
+    private int getCacheSetForKey(String key) {
+        int hash = Math.abs(key.hashCode());
+        return hash % numSets;
+    }
+
+    private class CacheEntry {
+        public String key;
+        public String value;
+        public boolean isUsed;
+
+        public CacheEntry() {
+            key = null; value = null; isUsed = false;
+        }
+
+        public CacheEntry(String key, String value) {
+            this.key = key;
+            this.value = value;
+            this.isUsed = false;
+        }
+    }
+
+    private class CacheSet {
+        public List<CacheEntry> cacheSet;
+        private int maxElemsPerSet;
+
+        public CacheSet(int maxElemsPerSet)
+        {
+            cacheSet = new ArrayList<CacheEntry>(maxElemsPerSet);
+            this.maxElemsPerSet = maxElemsPerSet;
+        }
+
+        private int getCacheEntryIndex(String key) {
+            for (int i = 0; i < getSetSize(); i++) {
+                String k = cacheSet.get(i).key;
+                if (key.equals(k))
+                    return i;
+            }
+            return -1;
+        }
+
+        public CacheEntry getCacheEntryForKey(String key) {
+            int idx = getCacheEntryIndex(key);
+            if (idx != -1) {
+                // mark it used.
+                CacheEntry ce = cacheSet.get(idx);
+                ce.isUsed = true;
+                return ce;
+            }
+            return null;
+        }
+
+        public void deleteCacheEntryForKey(String key) {
+            int idx = getCacheEntryIndex(key);
+            if (idx != -1) {
+                cacheSet.remove(idx);
+            }
+        }
+
+        public void putCacheEntryForKey(String key, String value) {
+            // check if key already exists
+            CacheEntry centry = getCacheEntryForKey(key);
+            if (centry != null) {
+                centry.value = value;
+                return;
+            }
+
+            // if set not full, just add it at the back
+            if (!isSetFull()) {
+                CacheEntry e = new CacheEntry(key, value);
+                cacheSet.add(e);
+                return;
+            }
+
+            // cycle all cache entries for first non-used entry and
+            // in the worst case you give everyone second chance and
+            // choose the first element.
+            for (int i = 0; i <= getSetSize(); i++) {
+                // always get first entry, as we are gonna traverse
+                // setSize times.
+                CacheEntry ce = cacheSet.get(0);
+                if (ce.isUsed) {
+                    // give it second chance, and add it to the last.
+                    ce.isUsed = false;
+                    cacheSet.remove(0);
+                    cacheSet.add(ce);
+                } else {
+                    // evict this entry.
+                    cacheSet.remove(0);
+                    ce = null;  // set null for gc
+                    CacheEntry e = new CacheEntry(key, value);
+                    cacheSet.add(e);
+                    break;
+                }
+            }
+            return;
+        }
+
+        public int getSetSize() {
+            return cacheSet.size();
+        }
+
+        private boolean isSetFull() {
+            return (getSetSize() == maxElemsPerSet);
+        }
+
+    }
 }

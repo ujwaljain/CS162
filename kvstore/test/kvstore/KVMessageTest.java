@@ -172,7 +172,7 @@ public class KVMessageTest {
             KVMessage failure = e.getKVMessage();
             assertEquals(RESP, failure.getMsgType());
             // TODO decide if we care what the following error message is. Most recent spec didn't specify.
-            assertEquals(ERROR_COULD_NOT_RECEIVE_DATA, failure.getMessage());
+            assertEquals(ERROR_PARSER, failure.getMessage());
             assertNull(failure.getKey());
             assertNull(failure.getValue());
         }

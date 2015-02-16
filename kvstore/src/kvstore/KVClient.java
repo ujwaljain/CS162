@@ -60,7 +60,7 @@ public class KVClient implements KeyValueInterface {
         try {
             sock.close();
         } catch (Exception e) {
-            // TODO: handle IOException
+            // ignore
         }
     }
 

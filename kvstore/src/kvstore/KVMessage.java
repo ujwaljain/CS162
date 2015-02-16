@@ -79,8 +79,8 @@ public class KVMessage implements Serializable {
      *         KVConstants.java for possible KVException messages.
      */
     public KVMessage(Socket sock, int timeout) throws KVException {
-        // TODO: handle timeout.
         try {
+            sock.setSoTimeout(timeout);
             NoCloseInputStream in = new NoCloseInputStream(sock.getInputStream());
             KVMessageType serializedKvm = this.unmarshal(in);
             this.msgType = serializedKvm.getType();
@@ -89,6 +89,8 @@ public class KVMessage implements Serializable {
             this.message = serializedKvm.getMessage();
         } catch (JAXBException e) {
             throw new KVException(KVConstants.ERROR_PARSER);
+        } catch (SocketTimeoutException e) {
+            throw new KVException(KVConstants.ERROR_SOCKET_TIMEOUT);
         } catch (IOException e) {
             throw new KVException(KVConstants.ERROR_COULD_NOT_RECEIVE_DATA);
         }
