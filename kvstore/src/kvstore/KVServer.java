@@ -41,8 +41,17 @@ public class KVServer implements KeyValueInterface {
      */
     @Override
     public void put(String key, String value) throws KVException {
+        // check if key/value is oversized.
+        if (key.length() > 256)
+            throw new KVException(ERROR_OVERSIZED_KEY);
+        if (value.length() > 256 * 1024)
+            throw new KVException(ERROR_OVERSIZED_VALUE);
+
+        Lock lock = dataCache.getLock(key);
+        lock.lock();
         dataStore.put(key, value);
-        // TODO: KVCache 
+        dataCache.put(key, value);
+        lock.unlock();
     }
 
     /**
@@ -55,8 +64,18 @@ public class KVServer implements KeyValueInterface {
      */
     @Override
     public String get(String key) throws KVException {
-        // TODO: KVCache
-        return dataStore.get(key);
+        Lock lock = dataCache.getLock(key);
+        try {
+            lock.lock();
+            String val = dataCache.get(key);
+            if (val == null)
+                return dataStore.get(key);
+            return val;
+        } catch (KVException e) {
+            throw e;
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
@@ -67,8 +86,16 @@ public class KVServer implements KeyValueInterface {
      */
     @Override
     public void del(String key) throws KVException {
-        // TODO: KVCache
-        dataStore.del(key);
+        Lock lock = dataCache.getLock(key);
+        try {
+            lock.lock();
+            dataCache.del(key);
+            dataStore.del(key);
+        } catch (KVException e) {
+            throw e;
+        } finally {
+            lock.unlock();
+        }
     }
 
     /**
@@ -80,7 +107,6 @@ public class KVServer implements KeyValueInterface {
      * @param key key to check for membership in store
      */
     public boolean hasKey(String key) {
-        // KVCache: TODO:
         try {
             String value = dataStore.get(key);
             return true;

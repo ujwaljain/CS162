@@ -2,9 +2,7 @@ package kvstore;
 
 import static kvstore.KVConstants.ERROR_NO_SUCH_KEY;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,6 +12,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import kvstore.xml.KVPairType;
+import kvstore.xml.KVSetType;
 import kvstore.xml.KVStoreType;
 import kvstore.xml.ObjectFactory;
 
@@ -134,7 +133,14 @@ public class KVStore implements KeyValueInterface {
      * @param fileName the file to write the serialized store
      */
     public void dumpToFile(String fileName) {
-        // implement me
+        try {
+            File f = new File(fileName);
+            FileOutputStream fstream = new FileOutputStream(f);
+            marshalTo(fstream);
+            fstream.close();
+        } catch (Exception e) {
+            // ignore
+        }
     }
 
     /**
@@ -148,6 +154,15 @@ public class KVStore implements KeyValueInterface {
     public void restoreFromFile(String fileName) {
         resetStore();
 
-        // implement me
+        try {
+            File f = new File(fileName);
+            KVStoreType storeType = unmarshal(f);
+
+            for (KVPairType kvPairType : storeType.getKVPair()) {
+                put(kvPairType.getKey(), kvPairType.getValue());
+            }
+        } catch (JAXBException e) {
+            //ignore
+        }
     }
 }
