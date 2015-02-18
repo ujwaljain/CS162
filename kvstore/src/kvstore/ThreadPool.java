@@ -1,11 +1,14 @@
 package kvstore;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ThreadPool {
 
     /* Array of threads in the threadpool */
     public Thread threads[];
-
+    public List<Runnable> jobs;
 
     /**
      * Constructs a Threadpool with a certain number of threads.
@@ -14,8 +17,11 @@ public class ThreadPool {
      */
     public ThreadPool(int size) {
         threads = new Thread[size];
-
-        // implement me
+        jobs = new ArrayList<Runnable>();
+        for (int i = 0; i < size; i++) {
+            threads[i] = new WorkerThread(this);
+            threads[i].start();
+        }
     }
 
     /**
@@ -27,8 +33,9 @@ public class ThreadPool {
      * @throws InterruptedException if thread is interrupted while in blocked
      *         state. Your implementation may or may not actually throw this.
      */
-    public void addJob(Runnable r) throws InterruptedException {
-        // implement me
+    public synchronized  void addJob(Runnable r) throws InterruptedException {
+        jobs.add(r);
+        notifyAll();
     }
 
     /**
@@ -37,9 +44,11 @@ public class ThreadPool {
      * @throws InterruptedException if thread is interrupted while in blocked
      *         state. Your implementation may or may not actually throw this.
      */
-    public Runnable getJob() throws InterruptedException {
-        // implement me
-        return null;
+    public synchronized Runnable getJob() throws InterruptedException {
+        while (jobs.isEmpty()) {
+            wait();
+        }
+        return jobs.remove(0);
     }
 
     /**
@@ -63,7 +72,14 @@ public class ThreadPool {
          */
         @Override
         public void run() {
-            // implement me
+            while (true) {
+                try {
+                    Runnable newJob = threadPool.getJob();
+                    newJob.run();
+                } catch (InterruptedException ex) {
+                    // ignore and try again.
+                }
+            }
         }
     }
 }
