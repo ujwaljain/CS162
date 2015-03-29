@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
 
 /**
  * This is a generic class that should handle all TCP network connections
@@ -85,9 +84,10 @@ public class SocketServer {
      *         listening for or servicing requests
      */
     public void start() throws IOException {
-        Socket socket = server.accept();
-        handler.handle(socket);
-        stopped = false;
+        while (!stopped) {
+            Socket socket = server.accept();
+            handler.handle(socket);
+        }
     }
 
     /**
@@ -97,8 +97,8 @@ public class SocketServer {
      */
     public void stop() {
         try {
-            server.close();
             stopped = true;
+            server.close();
         } catch (Exception e) {
             //TODO: handle IOException
         }

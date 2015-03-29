@@ -185,7 +185,7 @@ public class KVMessage implements Serializable {
     private KVMessageType unmarshal(InputStream is) throws JAXBException {
         JAXBContext jc = JAXBContext.newInstance(ObjectFactory.class);
         Unmarshaller unmarshaller = jc.createUnmarshaller();
-        return ((JAXBElement<KVMessageType>)unmarshaller.unmarshal(new NoCloseInputStream(is))).getValue();
+        return ((JAXBElement<KVMessageType>)unmarshaller.unmarshal(is)).getValue();
     }
 
     /**

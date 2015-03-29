@@ -50,13 +50,45 @@ public class ServerClientHandler implements NetworkHandler {
     @Override
     public void handle(Socket client) {
         try {
-            KVMessage kvm = new KVMessage(client);
-            // TODO: create a job and enqueue in threadpool.
+            threadPool.addJob(new handleJob(client));
         } catch (Exception e) {
             System.out.println("Error handling socket: ");
         }
     }
     
-    // implement me
+    private class handleJob implements Runnable {
+        private Socket client;
 
+        public handleJob(Socket client) {
+            this.client = client;
+        }
+
+        @Override
+        public void run() {
+            KVMessage req = null;
+            KVMessage resp = new KVMessage(RESP);
+            try {
+                req = new KVMessage(client);
+                if (PUT_REQ.equals(req.getMsgType())) {
+                    kvServer.put(req.getKey(), req.getValue());
+                    resp.setMessage(SUCCESS);
+                } else if (GET_REQ.equals(req.getMsgType())) {
+                    String value = kvServer.get(req.getKey());
+                    resp.setKey(req.getKey());
+                    resp.setValue(value);
+                } else if (DEL_REQ.equals(req.getMsgType())) {
+                    kvServer.del(req.getKey());
+                    resp.setMessage(SUCCESS);
+                }
+            } catch (KVException ex) {
+                resp = ex.getKVMessage();
+            }
+
+            try {
+                resp.sendMessage(client);
+            } catch (KVException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 }
